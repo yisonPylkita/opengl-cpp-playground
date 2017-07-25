@@ -83,6 +83,19 @@ int wmain_impl()
         glfwTerminate();
     });
 
+    GLFWwindow *window = glfwCreateWindow(800, 600, "OpenGL triangle", nullptr, nullptr);
+    if (!window) {
+        Log::error(L"Could not initialize window");
+        return EXIT_FAILURE;
+    }
+
+    glfwMakeContextCurrent(window);
+    while (!glfwWindowShouldClose(window)) {
+        glClear(GL_COLOR_CLEAR_VALUE);
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
     return EXIT_SUCCESS;
 }
 
