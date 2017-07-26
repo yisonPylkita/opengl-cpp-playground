@@ -2,7 +2,11 @@
 #include <string>
 #include <codecvt>
 #include <functional>
+#include <thread>
+#include <chrono>
 #include <GLFW/glfw3.h>
+
+using namespace std::chrono_literals;
 
 
 namespace str {
@@ -83,6 +87,11 @@ int wmain_impl()
         glfwTerminate();
     });
 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
     GLFWwindow *window = glfwCreateWindow(800, 600, "OpenGL triangle", nullptr, nullptr);
     if (!window) {
         Log::error(L"Could not initialize window");
@@ -91,9 +100,15 @@ int wmain_impl()
 
     glfwMakeContextCurrent(window);
     while (!glfwWindowShouldClose(window)) {
-        glClear(GL_COLOR_CLEAR_VALUE);
+        // draw
+        glClear(GL_COLOR_CLEAR_VALUE | GL_DEPTH_BUFFER_BIT);
         glfwSwapBuffers(window);
+
+        // handle events
         glfwPollEvents();
+
+        // most basic frames/second management
+        std::this_thread::sleep_for(10ms);
     }
 
     return EXIT_SUCCESS;
